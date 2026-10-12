@@ -43,12 +43,17 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
-      - name: Build JavaScript bundle (required)
+      - name: Build JavaScript bundle
         run: |
           npm run build
-          test -s www/app.bundle.js
-          grep -q 'app.bundle.js?v=5.5.2' www/index.html
-          echo "PASS: bundle exists and HTML loads v5.5.2."
+          python3 - <<'PY'
+          from pathlib import Path
+          bundle = Path("www/app.bundle.js")
+          html = Path("www/index.html").read_text()
+          assert bundle.is_file() and bundle.stat().st_size > 0, "app.bundle.js was not generated"
+          assert "app.bundle.js?v=5.5.4" in html, "index.html does not reference the v5.5.4 bundle"
+          print(f"PASS: bundle exists ({bundle.stat().st_size} bytes) and index references v5.5.4.")
+          PY
 
       - name: Verify native TTS dependency
         run: npm ls @capacitor-community/text-to-speech
@@ -68,12 +73,17 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Verify bundled JavaScript is copied into Android assets
+      - name: Verify bundle copied into Android assets
         run: |
-          test -s www/app.bundle.js
-          test -s android/app/src/main/assets/public/app.bundle.js
-          grep -q 'app.bundle.js?v=5.5.2' android/app/src/main/assets/public/index.html
-          echo "PASS: compiled bundle and matching HTML are in Android assets."
+          python3 - <<'PY'
+          from pathlib import Path
+          root = Path("android/app/src/main/assets/public")
+          bundle = root / "app.bundle.js"
+          html_path = root / "index.html"
+          assert bundle.is_file() and bundle.stat().st_size > 0, "Capacitor did not copy app.bundle.js"
+          assert html_path.is_file() and "app.bundle.js?v=5.5.4" in html_path.read_text(), "Android index.html has a mismatched bundle reference"
+          print("PASS: matching bundle and HTML copied to Android assets.")
+          PY
 
       - name: Verify Android version metadata
         run: |
@@ -81,9 +91,9 @@ jobs:
           from pathlib import Path
           import re
           s = Path("android/app/build.gradle").read_text()
-          assert re.search(r'(?m)^\s*versionCode\s*=?\s*552\b', s), "versionCode is not 552"
-          assert re.search(r'(?m)^\s*versionName\s*=?\s*["\']5\.5\.2["\']', s), "versionName is not 5.5.2"
-          print("PASS: Android versionName=5.5.2, versionCode=552")
+          assert re.search(r'(?m)^\s*versionCode\s*=?\s*554\b', s), "versionCode is not 554"
+          assert re.search(r'''(?m)^\s*versionName\s*=?\s*["']5\.5\.4["']''', s), "versionName is not 5.5.4"
+          print("PASS: Android versionName=5.5.4, versionCode=554")
           PY
 
       - name: Generate Android launcher icons
