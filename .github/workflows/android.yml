@@ -1,3 +1,4 @@
+
 name: Build Be Hoc Vui Android APK
 
 on:
@@ -12,18 +13,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check repository root
+      - name: Check repository files
         run: |
-          echo "Repository root:"
-          pwd
-          ls -la
-          test -f package.json || (echo "ERROR: package.json must be in the repository root" && exit 1)
-          test -f capacitor.config.json || (echo "ERROR: capacitor.config.json must be in the repository root" && exit 1)
-          test -f www/index.html || (echo "ERROR: www/index.html is missing" && exit 1)
+          test -f package.json
+          test -f capacitor.config.json
+          test -f www/index.html
+          test -f assets/icon-only.png
+          test -f assets/splash.png
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -35,9 +36,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-          # Intentionally no Gradle cache: the Android project may not exist yet.
 
-      - name: Install dependencies
+      - name: Install Python image tools
+        run: python3 -m pip install --user Pillow
+
+      - name: Install npm dependencies
         run: npm install
 
       - name: Add Android platform if missing
@@ -46,16 +49,30 @@ jobs:
             npx cap add android
           fi
 
+      - name: Generate Capacitor assets
+        run: npx capacitor-assets generate --android
+
       - name: Sync Capacitor
         run: npx cap sync android
+
+      - name: Generate Android launcher icons
+        run: python3 scripts/generate-android-icons.py
+
+      - name: Verify launcher icons
+        run: |
+          test -f android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          test -f android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          test -f android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          test -f android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          test -f android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 
       - name: Build debug APK
         run: |
           chmod +x android/gradlew
           cd android
-          ./gradlew --no-daemon assembleDebug
+          ./gradlew --no-daemon clean assembleDebug
 
-      - name: Upload debug APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Be-Hoc-Vui-Android-debug-APK
