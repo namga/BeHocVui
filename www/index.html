@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e9f5ff"><meta name="description" content="Ứng dụng học vui dành cho bé từ 5 đến 10 tuổi">
-<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon.png"><link rel="apple-touch-icon" href="icon.png"><link rel="stylesheet" href="style.css?v=5.1">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon.png"><link rel="apple-touch-icon" href="icon.png"><link rel="stylesheet" href="style.css?v=5.4.0">
 <title>Bé Học Vui</title>
 </head>
 <body>
-<header class="topbar"><div class="brand"><div class="mascot">🐼</div><div><b>Bé Học Vui</b><small>Mỗi ngày một điều hay!</small></div></div><button id="soundBtn" class="round" aria-label="Bật hoặc tắt âm thanh">🔊</button></header>
+<header class="topbar"><div class="brand"><div class="mascot">🐼</div><div><b>Bé Học Vui</b><small>Mỗi ngày một điều hay! · v5.4.0</small></div></div><button id="soundBtn" class="round" aria-label="Bật hoặc tắt âm thanh">🔊</button></header>
 <main>
 <section id="home" class="screen active">
   <div class="welcome"><div><p class="eyebrow">XIN CHÀO NHÀ KHÁM PHÁ! ✨</p><h1>Hôm nay mình<br>học gì nhỉ?</h1><p>Chọn một thế giới và bắt đầu nhé!</p></div><div class="hero-art">🌈</div></div>
@@ -38,5 +38,30 @@
 <section id="parents" class="screen"><div class="page-title"><p class="eyebrow">DÀNH CHO GIA ĐÌNH</p><h1>Cùng bé học vui 💛</h1><p>Gợi ý để việc học nhẹ nhàng và hiệu quả.</p></div><div class="parent-card"><span>⏰</span><div><b>Học ngắn, vui lâu</b><p>Gợi ý 10–15 phút mỗi lần, sau đó cho bé vận động hoặc nghỉ ngơi.</p></div></div><div class="parent-card"><span>👏</span><div><b>Khen sự cố gắng</b><p>Khuyến khích bé thử lại khi sai. Không cần so sánh bé với bạn khác.</p></div></div><div class="parent-card"><span>👨‍👩‍👧</span><div><b>Học cùng người lớn</b><p>Trò chuyện về cây cối, con vật và các tình huống an toàn trong đời sống.</p></div></div><div class="parent-card"><span>🛡️</span><div><b>An toàn cho trẻ</b><p>Ứng dụng không cần tài khoản. Tiến trình được lưu trên thiết bị này.</p></div></div></section>
 </main>
 <nav class="bottom-nav"><button class="nav-item selected" data-screen="home"><span>🏠</span><small>Trang chủ</small></button><button class="nav-item" data-screen="learn"><span>🎒</span><small>Học tập</small></button><button class="nav-item" data-screen="progress"><span>🏆</span><small>Thành tích</small></button><button class="nav-item" data-screen="parents"><span>💛</span><small>Gia đình</small></button></nav>
-<div id="toast" class="toast"></div><script src="app.bundle.js?v=5.3"></script>
+<div id="toast" class="toast"></div>
+<script>
+(function(){
+  const show = (name) => {
+    document.querySelectorAll('.screen').forEach(el => el.classList.toggle('active', el.id === name));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('selected', el.dataset.screen === name));
+    window.scrollTo(0, 0);
+  };
+  document.addEventListener('click', function(ev){
+    const nav = ev.target.closest && ev.target.closest('.nav-item');
+    if (nav) { show(nav.dataset.screen); return; }
+    const subject = ev.target.closest && ev.target.closest('[data-subject]');
+    if (subject) {
+      document.dispatchEvent(new CustomEvent('be-hoc-vui:subject', { detail: { subject: subject.dataset.subject } }));
+      ev.preventDefault(); ev.stopImmediatePropagation();
+      // Fallback navigation still works even if the app bundle failed to initialize.
+      show('learn');
+    }
+  }, true);
+  window.addEventListener('error', function(ev){
+    const box = document.getElementById('toast');
+    if (box) { box.textContent = 'Lỗi khởi động ứng dụng (' + (ev.message || 'JavaScript') + '). Vui lòng gửi ảnh màn hình cho hỗ trợ.'; box.classList.add('show'); }
+  });
+})();
+</script>
+<script src="app.bundle.js?v=5.4.0"></script>
 </body></html>

@@ -325,4 +325,14 @@ startSubject = function(key) {
   renderQuestion();
   setMode(learningMode);
 };
+// Bridge the early, defensive HTML navigation layer to the app logic.
+document.addEventListener("be-hoc-vui:subject", (event) => {
+  const key = event.detail && event.detail.subject;
+  if (key && (subjects[key] || key === "mixed")) startSubject(key);
+});
+// Delegated navigation is resilient to buttons being re-rendered later.
+document.addEventListener("click", (event) => {
+  const nav = event.target.closest && event.target.closest(".nav-item");
+  if (nav) showScreen(nav.dataset.screen);
+}, true);
 setMode("learn");

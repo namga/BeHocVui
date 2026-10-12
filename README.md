@@ -43,3 +43,8 @@ The workflow configuration has been prepared but has not been executed on your G
 ## Important: build the JavaScript bundle before packaging
 
 The app imports the native Capacitor text-to-speech plugin. Run `npm install` and `npm run build` before `npx cap sync android` and before deploying the PWA. The HTML loads `www/app.bundle.js`; opening `www/app.js` directly in a WebView causes a JavaScript module syntax error and prevents navigation handlers from running. The Android GitHub Actions workflow runs this build step automatically.
+
+
+## Version 5.4.0
+
+This release includes defensive page-navigation handling, visible version label v5.4.0, service-worker cache invalidation, and Android versionName 5.4.0 / versionCode 540. The workflow sets the native Android version after `npx cap add android`.
