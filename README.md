@@ -38,3 +38,8 @@ The workflow configuration has been prepared but has not been executed on your G
 - This version integrates Capacitor-7-compatible `@capacitor-community/text-to-speech` v6 for native Android/iOS reading and keeps browser speech as a fallback.
 - GitHub Actions bundles `www/app.js` to `www/app.bundle.js` before syncing/building the native app.
 - The phone still needs a working text-to-speech engine and Vietnamese voice data installed. On Android, check Settings → Accessibility or General management → Text-to-speech output (wording varies by device) and install Vietnamese voice data if available.
+
+
+## Important: build the JavaScript bundle before packaging
+
+The app imports the native Capacitor text-to-speech plugin. Run `npm install` and `npm run build` before `npx cap sync android` and before deploying the PWA. The HTML loads `www/app.bundle.js`; opening `www/app.js` directly in a WebView causes a JavaScript module syntax error and prevents navigation handlers from running. The Android GitHub Actions workflow runs this build step automatically.
