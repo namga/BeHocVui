@@ -91,26 +91,183 @@ const extraQuestions={
  ]
 };
 Object.keys(extraQuestions).forEach(k=>subjects[k].questions.push(...extraQuestions[k]));
-let learningMode="learn";
-const lessonNotes={
- math:{title:"Cùng đếm thật vui!",text:"Hãy chỉ vào từng hình và đếm chậm rãi. Khi làm phép cộng, mình thêm vào; khi làm phép trừ, mình bớt đi. Bé có thể dùng ngón tay hoặc đồ vật thật để luyện tập."},
- viet:{title:"Chơi cùng chữ và từ",text:"Đọc từ từ, nghe âm đầu rồi thử nói thành tiếng. Bé có thể tìm một đồ vật quanh mình có cùng âm đầu. Mỗi từ mới là một điều thú vị!"},
- nature:{title:"Nhà khoa học tí hon",text:"Quan sát bầu trời, cây cối và môi trường quanh em. Hãy tự hỏi: Mình nhìn thấy gì? Điều gì đã thay đổi? Nhớ khám phá ngoài trời cùng người lớn nhé."},
- life:{title:"Bạn thân của muôn loài",text:"Mỗi loài sinh vật có những đặc điểm riêng. Quan sát hình dáng, nơi sống và cách chúng phát triển. Hãy đối xử nhẹ nhàng với động vật và không chạm vào loài lạ."},
- world:{title:"Kỹ năng nhỏ, an toàn lớn",text:"Học cách giữ vệ sinh, nói lời lịch sự và nhận biết tình huống cần người lớn giúp đỡ. Khi không chắc chắn, hãy dừng lại và hỏi người lớn đáng tin cậy."},
- mixed:{title:"Thử thách khám phá",text:"Mỗi câu hỏi là một cơ hội để quan sát, suy nghĩ và thử lại. Đọc kỹ câu hỏi, tìm manh mối trong hình rồi chọn đáp án phù hợp nhé!"}
-};
-const originalPrepareQuestions=prepareQuestions;
-prepareQuestions=function(){let all=currentSubject().questions;const age=$("ageSelect")?.value||"7-8",diff=Number($("difficultySelect")?.value||2);let filtered=all.filter(q=>{let ageOk=!q.age||q.age===age;let levelOk=!q.difficulty||q.difficulty===diff;return ageOk&&levelOk});if(topic!=="Tất cả")filtered=filtered.filter(q=>q.topic===topic);if(!filtered.length){filtered=all.filter(q=>(!q.age||q.age===age)&&(!q.difficulty||q.difficulty===diff));if(topic!=="Tất cả")filtered=filtered.filter(q=>q.topic===topic)}if(!filtered.length)filtered=topic==="Tất cả"?all:all.filter(q=>q.topic===topic);roundQuestions=[...filtered].sort(()=>Math.random()-.5)};
-const originalRenderQuestion=renderQuestion;
-renderQuestion=function(){originalRenderQuestion();let q=roundQuestions[questionIndex%roundQuestions.length];if(q){$("lessonArt").textContent=q.art;$("lessonTitle").textContent=lessonNotes[subjectKey]?.title||"Cùng khám phá";$("lessonText").textContent=(lessonNotes[subjectKey]?.text||q.hint)+" Câu hỏi hôm nay: "+q.q;}};
-function setMode(mode){learningMode=mode;document.querySelectorAll(".mode-btn").forEach(b=>b.classList.toggle("selected",b.dataset.mode===mode));$("lessonPanel").classList.toggle("hidden",mode!=="learn");$("quizPanel").classList.toggle("hidden",mode==="learn");if(mode==="game"){ $("quizPanel").classList.remove("hidden");toast("Trò chơi nhanh: chọn đáp án trước khi hết lượt nhé!");}}
-document.querySelectorAll(".mode-btn").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
-["ageSelect","difficultySelect"].forEach(id=>$(id).addEventListener("change",()=>{questionIndex=0;prepareQuestions();renderQuestion();toast("Đã đổi lộ trình học cho bé!")}));
-$("speakBtn").onclick=()=>{if(!window.speechSynthesis){toast("Trình duyệt chưa hỗ trợ đọc thành tiếng");return;}speechSynthesis.cancel();const text=$("lessonTitle").textContent+". "+$("lessonText").textContent;const utterance=new SpeechSynthesisUtterance(text);utterance.lang="vi-VN";utterance.rate=.88;speechSynthesis.speak(utterance)};
-$("lessonNextBtn").onclick=()=>{questionIndex++;if(questionIndex%roundQuestions.length===0)prepareQuestions();renderQuestion();toast("Khám phá tiếp nào! 🌟")};
-// Đổi môn học luôn giữ nguyên chế độ học bằng hình đã chọn.
-const startSubjectOriginal=startSubject;
-startSubject=function(key){startSubjectOriginal(key);setMode(learningMode);};
 
+let learningMode = "learn";
+const lessonNotes = {
+  math: { title: "Cùng đếm thật vui!", text: "Hãy chỉ vào từng hình và đếm chậm rãi. Khi làm phép cộng, mình thêm vào; khi làm phép trừ, mình bớt đi. Bé có thể dùng ngón tay hoặc đồ vật thật để luyện tập." },
+  viet: { title: "Chơi cùng chữ và từ", text: "Đọc từ từ, nghe âm đầu rồi thử nói thành tiếng. Bé có thể tìm một đồ vật quanh mình có cùng âm đầu. Mỗi từ mới là một điều thú vị!" },
+  nature: { title: "Nhà khoa học tí hon", text: "Quan sát bầu trời, cây cối và môi trường quanh em. Hãy tự hỏi: Mình nhìn thấy gì? Điều gì đã thay đổi? Nhớ khám phá ngoài trời cùng người lớn nhé." },
+  life: { title: "Bạn thân của muôn loài", text: "Mỗi loài sinh vật có những đặc điểm riêng. Quan sát hình dáng, nơi sống và cách chúng phát triển. Hãy đối xử nhẹ nhàng với động vật và không chạm vào loài lạ." },
+  world: { title: "Kỹ năng nhỏ, an toàn lớn", text: "Học cách giữ vệ sinh, nói lời lịch sự và nhận biết tình huống cần người lớn giúp đỡ. Khi không chắc chắn, hãy dừng lại và hỏi người lớn đáng tin cậy." },
+  mixed: { title: "Thử thách khám phá", text: "Mỗi câu hỏi là một cơ hội để quan sát, suy nghĩ và thử lại. Đọc kỹ câu hỏi, tìm manh mối trong hình rồi chọn đáp án phù hợp nhé!" }
+};
+
+function prepareQuestions() {
+  const all = currentSubject().questions || [];
+  const age = $("ageSelect") ? $("ageSelect").value : "7-8";
+  const difficulty = Number($("difficultySelect") ? $("difficultySelect").value : 2);
+  let filtered = all.filter(q => (!q.age || q.age === age) && (!q.difficulty || Number(q.difficulty) === difficulty));
+  if (topic !== "Tất cả") filtered = filtered.filter(q => q.topic === topic);
+  if (!filtered.length && topic !== "Tất cả") filtered = all.filter(q => q.topic === topic);
+  if (!filtered.length) filtered = all;
+  roundQuestions = [...filtered].sort(() => Math.random() - 0.5);
+}
+
+function renderLesson(q) {
+  const note = lessonNotes[subjectKey] || lessonNotes.mixed;
+  $("lessonArt").textContent = q.art || currentSubject().emoji || "🌟";
+  $("lessonTitle").textContent = q.lessonTitle || note.title;
+  const extra = q.lesson || q.hint || "Quan sát hình minh họa và cùng người lớn khám phá thêm nhé.";
+  $("lessonText").textContent = `${note.text} ${extra} Cùng tìm hiểu: ${q.q}`;
+  $("speakBtn").disabled = false;
+  $("speakBtn").textContent = "🔊 Nghe bài học";
+}
+
+function renderQuestion() {
+  if (!roundQuestions || !roundQuestions.length) prepareQuestions();
+  const q = roundQuestions[questionIndex % roundQuestions.length];
+  if (!q) {
+    $("questionText").textContent = "Bé hãy chọn một chủ đề để bắt đầu nhé!";
+    $("answers").replaceChildren();
+    renderLesson({art:"🌟",q:"Chọn một chủ đề thú vị nhé!",hint:"Mỗi ngày khám phá một điều mới."});
+    return;
+  }
+  selected = null;
+  checked = false;
+  $("questionNumber").textContent = `Câu ${questionIndex + 1}`;
+  $("topicName").textContent = q.topic || "Khám phá";
+  $("questionArt").textContent = q.art || "🌟";
+  $("questionText").textContent = q.q || "Bé quan sát hình nhé!";
+  $("questionHint").textContent = q.hint || "Chọn đáp án đúng nhé!";
+  $("feedback").textContent = "";
+  $("feedback").className = "feedback";
+  $("checkBtn").classList.remove("hidden");
+  $("checkBtn").disabled = true;
+  $("nextBtn").classList.add("hidden");
+  const answers = $("answers");
+  answers.replaceChildren();
+  answers.style.display = "grid";
+  (q.a || []).forEach((answer, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "answer";
+    b.textContent = answer;
+    b.addEventListener("click", () => {
+      if (checked) return;
+      selected = i;
+      answers.querySelectorAll(".answer").forEach(x => x.classList.remove("chosen"));
+      b.classList.add("chosen");
+      $("checkBtn").disabled = false;
+    });
+    answers.appendChild(b);
+  });
+  // In case of malformed question data, show a visible fallback rather than a blank card.
+  if (!q.a || !q.a.length) {
+    const msg = document.createElement("p");
+    msg.className = "hint";
+    msg.textContent = "Bài này đang ở chế độ khám phá hình. Chọn “Học bằng hình” hoặc chuyển sang câu tiếp theo nhé.";
+    answers.appendChild(msg);
+  }
+  renderLesson(q);
+}
+
+$("checkBtn").onclick = () => {
+  if (selected === null || checked) return;
+  checked = true;
+  const q = roundQuestions[questionIndex % roundQuestions.length];
+  const buttons = [...$("answers").querySelectorAll(".answer")];
+  buttons.forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.correct) b.classList.add("correct");
+    if (i === selected && i !== q.correct) b.classList.add("wrong");
+  });
+  state.done++;
+  if (selected === q.correct) {
+    state.correct++;
+    state.stars++;
+    $("feedback").textContent = "Đúng rồi! Bé giỏi quá! ⭐";
+    $("feedback").className = "feedback good";
+    if (state.sound) beep(660);
+  } else {
+    $("feedback").textContent = "Mình thử lại nhé! Đáp án đúng được tô màu xanh 💛";
+    $("feedback").className = "feedback bad";
+    if (state.sound) beep(260);
+  }
+  save();
+  $("checkBtn").classList.add("hidden");
+  $("nextBtn").classList.remove("hidden");
+};
+
+$("nextBtn").onclick = () => {
+  questionIndex++;
+  if (questionIndex % roundQuestions.length === 0) prepareQuestions();
+  renderQuestion();
+};
+
+function setMode(mode) {
+  learningMode = mode;
+  document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("selected", b.dataset.mode === mode));
+  $("lessonPanel").classList.toggle("hidden", mode !== "learn");
+  $("quizPanel").classList.toggle("hidden", mode === "learn");
+  if (mode === "game") toast("Trò chơi nhanh: chọn đáp án đúng để nhận sao! 🌟");
+  renderQuestion();
+}
+document.querySelectorAll(".mode-btn").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
+["ageSelect", "difficultySelect"].forEach(id => {
+  $(id).addEventListener("change", () => {
+    questionIndex = 0;
+    prepareQuestions();
+    renderQuestion();
+    toast("Đã đổi lộ trình học cho bé!");
+  });
+});
+
+// Read the actual lesson using the device/browser's Vietnamese speech engine.
+$("speakBtn").onclick = () => {
+  const text = `${$("lessonTitle").textContent}. ${$("lessonText").textContent}`;
+  const synth = window.speechSynthesis;
+  if (!synth || typeof window.SpeechSynthesisUtterance === "undefined") {
+    toast("Thiết bị chưa hỗ trợ đọc bài trong ứng dụng. Hãy thử mở bằng Chrome.");
+    return;
+  }
+  try {
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "vi-VN";
+    utterance.rate = 0.82;
+    utterance.pitch = 1.05;
+    utterance.onstart = () => { $("speakBtn").textContent = "⏹️ Đang đọc… Nhấn để dừng"; };
+    utterance.onend = () => { $("speakBtn").textContent = "🔊 Nghe bài học"; };
+    utterance.onerror = () => {
+      $("speakBtn").textContent = "🔊 Nghe bài học";
+      toast("Không phát được giọng đọc. Kiểm tra âm lượng hoặc giọng tiếng Việt trên thiết bị.");
+    };
+    if (synth.speaking || synth.pending) synth.cancel();
+    if ($("speakBtn").dataset.reading === "true") {
+      synth.cancel();
+      $("speakBtn").dataset.reading = "false";
+      $("speakBtn").textContent = "🔊 Nghe bài học";
+      return;
+    }
+    $("speakBtn").dataset.reading = "true";
+    utterance.onend = () => { $("speakBtn").dataset.reading = "false"; $("speakBtn").textContent = "🔊 Nghe bài học"; };
+    utterance.onerror = () => { $("speakBtn").dataset.reading = "false"; $("speakBtn").textContent = "🔊 Nghe bài học"; toast("Không phát được giọng đọc. Kiểm tra âm lượng hoặc giọng tiếng Việt trên thiết bị."); };
+    synth.speak(utterance);
+  } catch (e) {
+    toast("Chưa thể phát âm thanh trên thiết bị này.");
+  }
+};
+$("lessonNextBtn").onclick = () => {
+  questionIndex++;
+  if (questionIndex % roundQuestions.length === 0) prepareQuestions();
+  renderQuestion();
+  toast("Khám phá tiếp nào! 🌟");
+};
+
+const startSubjectOriginal = startSubject;
+startSubject = function(key) {
+  startSubjectOriginal(key);
+  renderQuestion();
+  setMode(learningMode);
+};
 setMode("learn");

@@ -25,3 +25,9 @@ Download the artifact `Be-Hoc-Vui-Android-debug-APK`, extract `app-debug.apk`, u
 
 ## Limitations
 The workflow configuration has been prepared but has not been executed on your GitHub repository from this environment. If it fails, share the first red error step. This debug APK is for testing, not a signed Google Play release.
+
+## v5.1 bug fixes
+- Rebuilt question rendering so answer buttons are explicitly generated and visible in quiz mode.
+- Lesson mode now populates title, illustration and readable lesson text from the current question.
+- Added explicit Vietnamese speech synthesis feedback and a stop action when the read-aloud button is tapped while speaking.
+- Fixed CSS selectors for answer grid/hidden panels and bumped asset cache versions.

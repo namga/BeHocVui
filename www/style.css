@@ -32,3 +32,6 @@ body{font-size:18px;line-height:1.5}
 .round{width:48px;height:48px;font-size:22px}
 @media(min-width:700px){.subject{min-height:205px}.subject b{font-size:20px}.subject small{font-size:15px}.answer{font-size:19px}}
 @media(max-width:360px){.subject{min-height:190px;padding:12px}.subject b{font-size:16px}.subject small{font-size:13px}.nav-item small{font-size:11px}}
+
+/* v5.1: keep answer choices visible and easy to tap */
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;margin-top:12px}.answers .answer{display:block;visibility:visible;opacity:1;color:#24334b;background:#fbfdff;border:2px solid #dbe7f3;min-height:64px;font-size:19px;line-height:1.35;padding:14px 10px}.answers .answer.chosen{background:#eaf5ff;border-color:#4f98e1}.answers .answer.correct{background:#eaf9f0;border-color:#60bd8e}.answers .answer.wrong{background:#fff0f0;border-color:#f19c9c}

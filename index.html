@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e9f5ff"><meta name="description" content="Ứng dụng học vui dành cho bé từ 5 đến 10 tuổi">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon.png"><link rel="apple-touch-icon" href="icon.png"><link rel="stylesheet" href="style.css">
+<title>Bé Học Vui</title>
+</head>
+<body>
+<header class="topbar"><div class="brand"><div class="mascot">🐼</div><div><b>Bé Học Vui</b><small>Mỗi ngày một điều hay!</small></div></div><button id="soundBtn" class="round" aria-label="Bật hoặc tắt âm thanh">🔊</button></header>
+<main>
+<section id="home" class="screen active">
+  <div class="welcome"><div><p class="eyebrow">XIN CHÀO NHÀ KHÁM PHÁ! ✨</p><h1>Hôm nay mình<br>học gì nhỉ?</h1><p>Chọn một thế giới và bắt đầu nhé!</p></div><div class="hero-art">🌈</div></div>
+  <div class="progress-card"><div class="progress-icon">⭐</div><div class="progress-copy"><b>Hành trình của bé</b><small><span id="starCount">0</span> ngôi sao · <span id="doneCount">0</span> câu đã làm</small><div class="bar"><span id="progressBar"></span></div></div><div class="level-pill">Cấp độ <span id="levelNum">1</span></div></div>
+  <h2>Chọn môn học</h2><div class="subject-grid">
+    <button class="subject math" data-subject="math"><span class="subject-emoji">🔢</span><b>Toán vui</b><small>Đếm số, phép tính, hình khối</small><span class="go">Học ngay →</span></button>
+    <button class="subject viet" data-subject="viet"><span class="subject-emoji">📚</span><b>Tiếng Việt</b><small>Chữ cái, từ ngữ, câu hay</small><span class="go">Học ngay →</span></button>
+    <button class="subject nature" data-subject="nature"><span class="subject-emoji">🌱</span><b>Khám phá tự nhiên</b><small>Cây cối, thời tiết, Trái Đất</small><span class="go">Học ngay →</span></button>
+    <button class="subject life" data-subject="life"><span class="subject-emoji">🐾</span><b>Thế giới sinh vật</b><small>Động vật, thực vật, cơ thể</small><span class="go">Học ngay →</span></button>
+    <button class="subject world" data-subject="world"><span class="subject-emoji">🌍</span><b>Kiến thức quanh em</b><small>An toàn, cộng đồng, đời sống</small><span class="go">Học ngay →</span></button>
+    <button class="subject game" data-subject="mixed"><span class="subject-emoji">🎯</span><b>Đố vui tổng hợp</b><small>Thử thách nhiều chủ đề</small><span class="go">Chơi ngay →</span></button>
+  </div>
+  <div class="tip"><span>💡</span><div><b>Mẹo nhỏ</b><p>Học từng chút một, nghỉ ngơi khi mệt và nhờ người lớn cùng khám phá nhé!</p></div></div>
+</section>
+<section id="learn" class="screen">
+  <button class="back" id="backHome">← Trang chủ</button>
+  <div class="learn-head"><div><p class="eyebrow" id="subjectEyebrow">CÙNG HỌC NÀO</p><h1 id="subjectTitle">Toán vui</h1><p id="subjectIntro">Học qua những câu hỏi thú vị.</p></div><div class="big-emoji" id="subjectEmoji">🔢</div></div>
+  <div class="learning-settings">
+    <label>Độ tuổi <select id="ageSelect"><option value="5-6">5–6 tuổi</option><option value="7-8" selected>7–8 tuổi</option><option value="9-10">9–10 tuổi</option></select></label>
+    <label>Độ khó <select id="difficultySelect"><option value="1">Dễ 🌱</option><option value="2" selected>Vừa 🌟</option><option value="3">Thử thách 🚀</option></select></label>
+  </div>
+  <div class="filters" id="topicFilters"></div>
+  <div class="mode-switch"><button class="mode-btn selected" data-mode="learn">🖼️ Học bằng hình</button><button class="mode-btn" data-mode="quiz">🎯 Trả lời câu hỏi</button><button class="mode-btn" data-mode="game">🧩 Trò chơi nhanh</button></div>
+  <div id="lessonPanel" class="lesson-panel hidden"><div class="lesson-illustration" id="lessonArt">🌱</div><div class="lesson-copy"><span class="lesson-tag">CÙNG KHÁM PHÁ</span><h2 id="lessonTitle">Bài học</h2><p id="lessonText">Nội dung bài học sẽ hiện ở đây.</p></div><div class="lesson-actions"><button id="speakBtn" class="secondary">🔊 Nghe bài học</button><button id="lessonNextBtn" class="primary">Bài tiếp theo →</button></div></div>
+  <div id="quizPanel" class="quiz-card"><div class="quiz-meta"><span id="questionNumber">Câu 1</span><span id="topicName">Đếm số</span></div><div class="question-art" id="questionArt">🍎 🍎</div><h2 id="questionText">Có bao nhiêu quả táo?</h2><p class="hint" id="questionHint">Chọn đáp án đúng nhé!</p><div class="answers" id="answers"></div><div id="feedback" class="feedback" aria-live="polite"></div><div class="quiz-actions"><button id="checkBtn" class="primary" disabled>Kiểm tra nhé!</button><button id="nextBtn" class="primary hidden">Câu tiếp theo →</button></div></div>
+</section>
+<section id="progress" class="screen"><div class="page-title"><p class="eyebrow">BÉ ĐÃ LỚN HƠN MỖI NGÀY</p><h1>Thành tích của bé 🏆</h1><p>Cố gắng của bé đều đáng khen!</p></div><div class="stats-grid"><div class="stat"><span>⭐</span><b id="statStars">0</b><small>Ngôi sao</small></div><div class="stat"><span>✅</span><b id="statDone">0</b><small>Câu đã làm</small></div><div class="stat"><span>🎯</span><b id="statCorrect">0</b><small>Câu đúng</small></div></div><div class="achievement"><span>🌟</span><div><b>Nhà khám phá chăm chỉ</b><p id="achievementText">Hoàn thành câu hỏi đầu tiên để nhận ngôi sao nhé!</p></div></div><button id="resetBtn" class="reset">Đặt lại tiến trình</button></section>
+<section id="parents" class="screen"><div class="page-title"><p class="eyebrow">DÀNH CHO GIA ĐÌNH</p><h1>Cùng bé học vui 💛</h1><p>Gợi ý để việc học nhẹ nhàng và hiệu quả.</p></div><div class="parent-card"><span>⏰</span><div><b>Học ngắn, vui lâu</b><p>Gợi ý 10–15 phút mỗi lần, sau đó cho bé vận động hoặc nghỉ ngơi.</p></div></div><div class="parent-card"><span>👏</span><div><b>Khen sự cố gắng</b><p>Khuyến khích bé thử lại khi sai. Không cần so sánh bé với bạn khác.</p></div></div><div class="parent-card"><span>👨‍👩‍👧</span><div><b>Học cùng người lớn</b><p>Trò chuyện về cây cối, con vật và các tình huống an toàn trong đời sống.</p></div></div><div class="parent-card"><span>🛡️</span><div><b>An toàn cho trẻ</b><p>Ứng dụng không cần tài khoản. Tiến trình được lưu trên thiết bị này.</p></div></div></section>
+</main>
+<nav class="bottom-nav"><button class="nav-item selected" data-screen="home"><span>🏠</span><small>Trang chủ</small></button><button class="nav-item" data-screen="learn"><span>🎒</span><small>Học tập</small></button><button class="nav-item" data-screen="progress"><span>🏆</span><small>Thành tích</small></button><button class="nav-item" data-screen="parents"><span>💛</span><small>Gia đình</small></button></nav>
+<div id="toast" class="toast"></div><script src="app.js"></script>
+</body></html>
