@@ -1,22 +1,27 @@
-# Bé Học Vui v3 — Android + PWA
+# Bé Học Vui Android v5 — launcher icon fix
 
-## Updates
-- The standalone launcher icon artwork is now replaced (not cropped from a promotional screen collage).
-- Refreshed app icon and added Capacitor asset inputs (`assets/icon.png`, `assets/splash.png`).
-- Larger text, illustrations, buttons and touch targets for children aged 5–10.
-- Uses the latest available v2 question bank and learning screens.
-- Android GitHub Actions builds a debug APK and uploads it as an artifact.
-- Workflow creates the Android platform if missing, generates native icons/splash, syncs web assets, then builds.
+This package addresses the default blue Android icon seen in the installed APK.
 
-## GitHub upload
-Upload the **contents of this folder** to the repository root. Ensure `package.json`, `capacitor.config.json`, `www/`, `assets/`, and `.github/workflows/android-build.yml` are at the root. Do not upload this folder nested inside another directory.
+## What changed
+- Added the dedicated square launcher artwork as both `assets/icon.png` and the conventional `assets/icon-only.png`.
+- Added `scripts/generate-android-icons.py` to write explicit `ic_launcher.png` and `ic_launcher_round.png` resources into all Android density folders.
+- Workflow runs icon generation **after** the Capacitor Android project exists and after sync, then runs `clean assembleDebug`.
+- Verifies launcher resources exist before building the APK.
+- Larger typography and touch targets from the previous package are retained.
 
-## Build
-GitHub → Actions → Build Be Hoc Vui Android APK → Run workflow.
-Download artifact `Be-Hoc-Vui-Android-debug-APK`; extract `app-debug.apk`.
+## Upload to GitHub
+Upload the contents of this ZIP to the repository root (not the containing folder). Confirm these paths are at the root:
+- `package.json`
+- `capacitor.config.json`
+- `assets/icon-only.png`
+- `scripts/generate-android-icons.py`
+- `.github/workflows/android-build.yml`
+- `www/index.html`
 
-## Important
-This produces an unsigned/debug testing APK, not a Google Play release. The workflow has not been run against your GitHub repository from this environment. If your repo has an existing native `android/` project, keep it and check Capacitor/Gradle compatibility.
+Replace the old workflow file and commit the changes. Then run **Actions → Build Be Hoc Vui Android APK → Run workflow**.
 
-## Important for icon updates
-Android launcher icons are packaged into the APK at build time. After uploading this source, run the Android workflow and install the newly generated APK; an already installed older APK will keep its old launcher icon. If the phone still shows a cached old icon, uninstall the old test app and install the new APK.
+## Install the correct artifact
+Download the artifact `Be-Hoc-Vui-Android-debug-APK`, extract `app-debug.apk`, uninstall the previously installed test app, then install the new APK. Android can cache launcher icons, and an old installed APK cannot gain a new icon by itself.
+
+## Limitations
+The workflow configuration has been prepared but has not been executed on your GitHub repository from this environment. If it fails, share the first red error step. This debug APK is for testing, not a signed Google Play release.

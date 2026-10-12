@@ -9,7 +9,7 @@
     "cap:add:android": "cap add android",
     "cap:sync:android": "cap sync android",
     "cap:open:android": "cap open android",
-    "assets:android": "capacitor-assets generate --android"
+    "assets:android": "capacitor-assets generate --android && python3 scripts/generate-android-icons.py"
   },
   "dependencies": {
     "@capacitor/core": "^7.4.3"
