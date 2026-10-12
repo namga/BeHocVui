@@ -69,3 +69,7 @@ The uploaded workflow omitted `npm run build`, even though `www/index.html` load
 - The Android version setter supports both Gradle forms (`versionName "1.0"` and `versionName = "1.0"`).
 - Version is 5.5.2, versionCode 552. The workflow checks these values before building.
 - If Actions fails at a verification step, do not install an older artifact; fix the indicated workflow/source issue first.
+
+
+## v5.5.3: actual JavaScript compile fix
+The v5.5.2 build log identified duplicate top-level `prepareQuestions()` and `renderQuestion()` declarations in `www/app.js`. This release removes the obsolete first implementations and keeps the enhanced implementations that render selectable answer buttons and apply age/difficulty filters. The workflow builds and verifies the bundle before packaging, and sets Android versionName 5.5.3 / versionCode 553.
