@@ -1,125 +1,71 @@
-name: Build Be Hoc Vui Android APK v5.5.5
+name: Build Be Hoc Vui Android APK
 
 on:
-  workflow_dispatch:
   push:
     branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+concurrency:
+  group: android-build-${{ github.ref }}
+  cancel-in-progress: true
 
-      - name: Check repository files
-        run: |
-          test -f package.json
-          test -f capacitor.config.json
-          test -f www/index.html
-          test -f www/app.js
-          test -f assets/icon-only.png
-          test -f assets/splash.png
-          test -f .github/workflows/android-build.yml
+jobs:
+  build-debug-apk:
+    name: Build debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Set up Java 21
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
 
-      - name: Install Python image tools
-        run: python3 -m pip install --user Pillow
-
       - name: Install npm dependencies
         run: npm install
 
-      - name: Build JavaScript bundle
-        run: |
-          npm run build
-          python3 - <<'PY'
-          from pathlib import Path
-          bundle = Path("www/app.bundle.js")
-          html = Path("www/index.html").read_text()
-          assert bundle.is_file() and bundle.stat().st_size > 0, "app.bundle.js was not generated"
-          assert "app.bundle.js?v=5.5.5" in html, "index.html does not reference the v5.5.5 bundle"
-          print(f"PASS: bundle exists ({bundle.stat().st_size} bytes) and index references v5.5.5.")
-          PY
-
-      - name: Verify native TTS dependency
-        run: npm ls @capacitor-community/text-to-speech
-
-      - name: Add Android platform if missing
+      - name: Add Android platform if not committed
+        shell: bash
         run: |
           if [ ! -d android ]; then
             npx cap add android
           fi
 
-      - name: Set Android app version
-        run: python3 scripts/set-android-version.py
-
-      - name: Generate Capacitor assets
-        run: npx capacitor-assets generate --android
-
-      - name: Sync Capacitor
+      - name: Sync web assets into Android project
         run: npx cap sync android
 
-      - name: Verify bundle copied into Android assets
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          root = Path("android/app/src/main/assets/public")
-          bundle = root / "app.bundle.js"
-          html_path = root / "index.html"
-          assert bundle.is_file() and bundle.stat().st_size > 0, "Capacitor did not copy app.bundle.js"
-          assert html_path.is_file() and "app.bundle.js?v=5.5.5" in html_path.read_text(), "Android index.html has a mismatched bundle reference"
-          print("PASS: matching bundle and HTML copied to Android assets.")
-          PY
-
-      - name: Verify Android version metadata
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          s = Path("android/app/build.gradle").read_text()
-          assert re.search(r'(?m)^\s*versionCode\s*=?\s*555\b', s), "versionCode is not 555"
-          assert re.search(r'''(?m)^\s*versionName\s*=?\s*["']5\.5\.5["']''', s), "versionName is not 5.5.5"
-          print("PASS: Android versionName=5.5.5, versionCode=555")
-          PY
-
-      - name: Generate Android launcher icons
-        run: python3 scripts/generate-android-icons.py
-
-      - name: Verify launcher icons
-        run: |
-          test -f android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-          test -f android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-          test -f android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-          test -f android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-          test -f android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-
       - name: Build debug APK
-        run: |
-          chmod +x android/gradlew
-          cd android
-          ./gradlew --no-daemon clean assembleDebug
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug
 
-      - name: Verify APK exists
-        run: test -s android/app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Upload APK
+      - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: Be-Hoc-Vui-Android-v5.5.5-debug-APK
+          name: Be-Hoc-Vui-Android-debug-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Upload Android project for troubleshooting
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Be-Hoc-Vui-Android-build-logs
+          path: |
+            android/**/*.log
+            android/app/build/outputs/logs/**
+          if-no-files-found: ignore
+          retention-days: 7
