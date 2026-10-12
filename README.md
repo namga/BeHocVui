@@ -1,52 +1,25 @@
-# Bé Học Vui — Capacitor Android + iOS + GitHub Actions
+# Bé Học Vui — Android GitHub Actions (fixed)
 
-This starter wraps the Vietnamese kids learning web app in Capacitor. It includes GitHub Actions workflows for building an Android debug APK and an unsigned iOS simulator app.
+## Why the previous workflow failed
+The screenshot shows `actions/setup-java` failed before Gradle ran because it searched the checked-out repository for Gradle files and found none. This commonly happens when `setup-java` has `cache: gradle` enabled even though Capacitor generates the `android/` Gradle project later in the job, or when the project files are uploaded one directory too deep.
 
-## Build Android APK first (no paid account required)
+This workflow intentionally does **not** enable Gradle caching before the Android project exists. It uses Java 21, installs the Capacitor dependencies, generates `android/` when absent, syncs the web assets, and builds a debug APK.
 
-1. Create a GitHub repository, for example `be-hoc-vui`.
-2. Upload all files from this folder to the repository root, including `.github/workflows/` and hidden files.
-3. Open **Actions** and enable workflows if GitHub asks.
-4. Select **Build Be Hoc Vui Android APK** and click **Run workflow**, or push to `main`/`master`.
-5. When the run completes, open the run's **Artifacts** section and download `Be-Hoc-Vui-Android-debug-APK`.
-6. Extract the artifact ZIP. It contains `app-debug.apk`. Transfer it to an Android phone and install it. Android may ask you to allow installation from that source.
+## Upload to GitHub correctly
+Upload the **contents of this folder** to the repository root. The repository root should contain:
+- `package.json`
+- `capacitor.config.json`
+- `www/index.html`
+- `.github/workflows/android-build.yml`
 
-The workflow uses a GitHub-hosted Ubuntu runner, Node.js 22, Java 21, generates the Capacitor Android project when it is not committed, syncs `www/`, and runs `assembleDebug`.
+Do not upload the parent folder as a nested directory. For example, avoid `Be_Hoc_Vui_Android_Fixed/package.json` inside the GitHub repository; `package.json` must be at the repository root.
 
-## Important notes about this APK
+## Run the build
+1. Push to `main` or `master`, or open **Actions → Build Be Hoc Vui Android APK → Run workflow**.
+2. When it succeeds, open the workflow run and download the artifact **Be-Hoc-Vui-Android-debug-APK**.
+3. Extract `app-debug.apk` and transfer it to the Android phone for testing.
 
-- This is a **debug APK** for testing, not a Play Store release build.
-- It does not need an Apple or Google paid developer account to build.
-- The workflow has not been run on GitHub from this package yet; run it to verify dependencies and build output.
-- If your repository already contains an Android project, the workflow reuses it and runs `npx cap sync android`.
-- For a Play Store release later, configure a signed Android App Bundle (`.aab`) using protected GitHub Actions secrets. Never commit signing keystores or passwords.
-
-## Build iOS
-
-The separate workflow is `.github/workflows/ios-build.yml`. It runs on a macOS GitHub runner. An unsigned simulator app is useful for build checks but is not an installable iPhone IPA. Installing on a physical iPhone or publishing to TestFlight/App Store requires the appropriate signing setup; distribution generally requires Apple Developer Program membership.
-
-## Project structure
-
-```text
-Be_Hoc_Vui/
-├── .github/workflows/
-│   ├── android-build.yml
-│   └── ios-build.yml
-├── www/                       # HTML/CSS/JS/PWA app
-├── package.json
-├── capacitor.config.json
-└── README.md
-```
-
-## Local development
-
-```bash
-npm install
-npx cap add android      # only once, if no android/ folder exists
-npx cap sync android
-npx cap open android
-```
-
-## Security
-
-Never commit signing keystores, `.jks`/`.keystore` files, certificates, API keys, or passwords. Use GitHub Actions secrets for release signing.
+## Notes
+- This produces a debug APK for testing, not a signed Play Store release.
+- The workflow is a corrected configuration but has not been executed on your GitHub repository from this environment.
+- If your repository already contains a native Android project, keep its `android/` directory and ensure the project uses a Gradle wrapper compatible with the configured Android/Capacitor versions.
