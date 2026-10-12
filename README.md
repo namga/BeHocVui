@@ -1,6 +1,7 @@
 # Bé Học Vui v3 — Android + PWA
 
 ## Updates
+- The standalone launcher icon artwork is now replaced (not cropped from a promotional screen collage).
 - Refreshed app icon and added Capacitor asset inputs (`assets/icon.png`, `assets/splash.png`).
 - Larger text, illustrations, buttons and touch targets for children aged 5–10.
 - Uses the latest available v2 question bank and learning screens.
@@ -16,3 +17,6 @@ Download artifact `Be-Hoc-Vui-Android-debug-APK`; extract `app-debug.apk`.
 
 ## Important
 This produces an unsigned/debug testing APK, not a Google Play release. The workflow has not been run against your GitHub repository from this environment. If your repo has an existing native `android/` project, keep it and check Capacitor/Gradle compatibility.
+
+## Important for icon updates
+Android launcher icons are packaged into the APK at build time. After uploading this source, run the Android workflow and install the newly generated APK; an already installed older APK will keep its old launcher icon. If the phone still shows a cached old icon, uninstall the old test app and install the new APK.
