@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e9f5ff"><meta name="description" content="Ứng dụng học vui dành cho bé từ 5 đến 10 tuổi">
-<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon.png"><link rel="apple-touch-icon" href="icon.png"><link rel="stylesheet" href="style.css?v=5.5.3">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon.png"><link rel="apple-touch-icon" href="icon.png"><link rel="stylesheet" href="style.css?v=5.5.4">
 <title>Bé Học Vui</title>
 </head>
 <body>
-<header class="topbar"><div class="brand"><div class="mascot">🐼</div><div><b>Bé Học Vui</b><small>Mỗi ngày một điều hay! · v5.5.3</small></div></div><button id="soundBtn" class="round" aria-label="Bật hoặc tắt âm thanh">🔊</button></header>
+<header class="topbar"><div class="brand"><div class="mascot">🐼</div><div><b>Bé Học Vui</b><small>Mỗi ngày một điều hay! · v5.5.4</small></div></div><button id="soundBtn" class="round" aria-label="Bật hoặc tắt âm thanh">🔊</button></header>
 <main>
 <section id="home" class="screen active">
   <div class="welcome"><div><p class="eyebrow">XIN CHÀO NHÀ KHÁM PHÁ! ✨</p><h1>Hôm nay mình<br>học gì nhỉ?</h1><p>Chọn một thế giới và bắt đầu nhé!</p></div><div class="hero-art">🌈</div></div>
@@ -69,11 +69,11 @@
     if (ev.target && ev.target.tagName === "SCRIPT" && (ev.target.src || "").includes("app.bundle.js")) {
       const box = document.getElementById("toast");
       if (box) {
-        box.textContent = "Thiếu tệp ứng dụng đã biên dịch. Hãy build lại APK bằng workflow v5.5.3.";
+        box.textContent = "Thiếu tệp ứng dụng đã biên dịch. Hãy build lại APK bằng workflow v5.5.4.";
         box.classList.add("show");
       }
     }
   }, true);
 </script>
-<script src="app.bundle.js?v=5.5.3" onload="window.__beHocVuiBundleLoaded=true" onerror="this.onerror=null;document.getElementById('toast').textContent='Không tải được mã ứng dụng. APK cần được build bằng workflow v5.5.3.';document.getElementById('toast').classList.add('show')"></script>
+<script src="app.bundle.js?v=5.5.4" onload="window.__beHocVuiBundleLoaded=true" onerror="this.onerror=null;document.getElementById('toast').textContent='Không tải được mã ứng dụng. APK cần được build bằng workflow v5.5.4.';document.getElementById('toast').classList.add('show')"></script>
 </body></html>

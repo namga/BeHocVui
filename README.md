@@ -73,3 +73,7 @@ The uploaded workflow omitted `npm run build`, even though `www/index.html` load
 
 ## v5.5.3: actual JavaScript compile fix
 The v5.5.2 build log identified duplicate top-level `prepareQuestions()` and `renderQuestion()` declarations in `www/app.js`. This release removes the obsolete first implementations and keeps the enhanced implementations that render selectable answer buttons and apply age/difficulty filters. The workflow builds and verifies the bundle before packaging, and sets Android versionName 5.5.3 / versionCode 553.
+
+
+## v5.5.4: workflow check correction
+The v5.5.3 screenshot shows esbuild successfully emitted `www/app.bundle.js`, then the workflow failed immediately after that step. This revision replaces fragile shell `grep` checks with explicit Python assertions and corrects a version-check mismatch where the workflow expected 5.5.2 while claiming 5.5.3. The duplicate function declarations removed in v5.5.3 remain fixed. Android version is 5.5.4 / versionCode 554.
