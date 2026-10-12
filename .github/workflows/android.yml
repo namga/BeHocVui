@@ -1,5 +1,4 @@
-
-name: Build Be Hoc Vui Android APK
+name: Build Be Hoc Vui Android APK v5.5.2
 
 on:
   workflow_dispatch:
@@ -13,7 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 40
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,8 +21,10 @@ jobs:
           test -f package.json
           test -f capacitor.config.json
           test -f www/index.html
+          test -f www/app.js
           test -f assets/icon-only.png
           test -f assets/splash.png
+          test -f .github/workflows/android-build.yml
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -32,7 +32,7 @@ jobs:
           node-version: 22
 
       - name: Set up Java 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
@@ -43,17 +43,48 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
+      - name: Build JavaScript bundle (required)
+        run: |
+          npm run build
+          test -s www/app.bundle.js
+          grep -q 'app.bundle.js?v=5.5.2' www/index.html
+          echo "PASS: bundle exists and HTML loads v5.5.2."
+
+      - name: Verify native TTS dependency
+        run: npm ls @capacitor-community/text-to-speech
+
       - name: Add Android platform if missing
         run: |
           if [ ! -d android ]; then
             npx cap add android
           fi
 
+      - name: Set Android app version
+        run: python3 scripts/set-android-version.py
+
       - name: Generate Capacitor assets
         run: npx capacitor-assets generate --android
 
       - name: Sync Capacitor
         run: npx cap sync android
+
+      - name: Verify bundled JavaScript is copied into Android assets
+        run: |
+          test -s www/app.bundle.js
+          test -s android/app/src/main/assets/public/app.bundle.js
+          grep -q 'app.bundle.js?v=5.5.2' android/app/src/main/assets/public/index.html
+          echo "PASS: compiled bundle and matching HTML are in Android assets."
+
+      - name: Verify Android version metadata
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s = Path("android/app/build.gradle").read_text()
+          assert re.search(r'(?m)^\s*versionCode\s*=?\s*552\b', s), "versionCode is not 552"
+          assert re.search(r'(?m)^\s*versionName\s*=?\s*["\']5\.5\.2["\']', s), "versionName is not 5.5.2"
+          print("PASS: Android versionName=5.5.2, versionCode=552")
+          PY
 
       - name: Generate Android launcher icons
         run: python3 scripts/generate-android-icons.py
@@ -72,10 +103,13 @@ jobs:
           cd android
           ./gradlew --no-daemon clean assembleDebug
 
+      - name: Verify APK exists
+        run: test -s android/app/build/outputs/apk/debug/app-debug.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Be-Hoc-Vui-Android-debug-APK
+          name: Be-Hoc-Vui-Android-v5.5.2-debug-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
