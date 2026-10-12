@@ -1,0 +1,116 @@
+const subjects={
+ math:{title:"Toán vui",emoji:"🔢",intro:"Đếm, tính toán và nhận biết hình khối.",topics:["Tất cả","Đếm số","Phép tính","Hình học"],questions:[
+ {topic:"Đếm số",art:"🍎 🍎 🍎",q:"Có mấy quả táo?",a:["2 quả","3 quả","4 quả","5 quả"],correct:1,hint:"Cùng đếm từng quả nhé!"},
+ {topic:"Đếm số",art:"🐟 🐟 🐟 🐟",q:"Có 4 con cá, thêm 1 con cá. Có tất cả mấy con?",a:["4 con","5 con","6 con","3 con"],correct:1,hint:"Đếm tiếp sau số 4 nào!"},
+ {topic:"Phép tính",art:"🌟 + 🌟",q:"1 + 1 bằng mấy?",a:["1","2","3","4"],correct:1,hint:"Gộp hai ngôi sao lại nhé."},
+ {topic:"Phép tính",art:"🍪 🍪 🍪",q:"Có 3 chiếc bánh, ăn 1 chiếc. Còn mấy chiếc?",a:["1 chiếc","2 chiếc","3 chiếc","4 chiếc"],correct:1,hint:"Bớt đi 1 là phép trừ."},
+ {topic:"Hình học",art:"🔺　🟦　⚪",q:"Hình nào có 3 cạnh?",a:["Hình tròn","Hình vuông","Hình tam giác","Hình chữ nhật"],correct:2,hint:"Hãy đếm số cạnh của mỗi hình."},
+ {topic:"Phép tính",art:"2️⃣ + 3️⃣",q:"2 + 3 bằng mấy?",a:["4","5","6","3"],correct:1,hint:"Đếm 2 rồi thêm 3 bước."}]},
+ viet:{title:"Tiếng Việt",emoji:"📚",intro:"Làm quen chữ cái, từ ngữ và câu hay.",topics:["Tất cả","Chữ cái","Từ ngữ","Câu hay"],questions:[
+ {topic:"Chữ cái",art:"🅱️",q:"Từ “bà” bắt đầu bằng chữ nào?",a:["a","b","m","t"],correct:1,hint:"Bà và bé cùng bắt đầu bằng âm b."},
+ {topic:"Từ ngữ",art:"🐱",q:"Con vật này được gọi là gì?",a:["Con chó","Con mèo","Con vịt","Con gà"],correct:1,hint:"Con vật kêu meo meo."},
+ {topic:"Chữ cái",art:"🍌",q:"Từ “chuối” bắt đầu bằng âm nào?",a:["ch","tr","kh","th"],correct:0,hint:"Chuối có âm đầu là ch."},
+ {topic:"Câu hay",art:"☀️ 🌞",q:"Buổi sáng, em thường nói lời chào nào?",a:["Chúc ngủ ngon","Xin chào","Tạm biệt","Hẹn mai"],correct:1,hint:"Một lời chào thân thiện."},
+ {topic:"Từ ngữ",art:"🌸",q:"Từ nào chỉ một loài hoa?",a:["Bàn","Hoa hồng","Cái cốc","Quyển vở"],correct:1,hint:"Hoa hồng có cánh và hương thơm."}]},
+ nature:{title:"Khám phá tự nhiên",emoji:"🌱",intro:"Tìm hiểu thời tiết, Trái Đất và môi trường.",topics:["Tất cả","Thời tiết","Trái Đất","Môi trường"],questions:[
+ {topic:"Thời tiết",art:"☀️",q:"Mặt Trời giúp ban ngày có điều gì?",a:["Ánh sáng","Tuyết rơi","Trời tối","Mưa đá"],correct:0,hint:"Mặt Trời chiếu sáng và sưởi ấm Trái Đất."},
+ {topic:"Trái Đất",art:"🌍",q:"Chúng ta đang sống trên đâu?",a:["Mặt Trăng","Sao Hỏa","Trái Đất","Mặt Trời"],correct:2,hint:"Hành tinh xanh của chúng ta."},
+ {topic:"Môi trường",art:"♻️",q:"Rác nên được bỏ ở đâu?",a:["Dưới sông","Trên đường","Trong thùng rác","Trong vườn hoa"],correct:2,hint:"Bỏ rác đúng nơi giúp môi trường sạch đẹp."},
+ {topic:"Thời tiết",art:"🌧️ ☂️",q:"Khi trời mưa, vật gì giúp che mưa?",a:["Cái quạt","Ô/dù","Kính lúp","Cái thìa"],correct:1,hint:"Nhớ mang theo khi ra ngoài trời mưa nhé."},
+ {topic:"Trái Đất",art:"🌙 ⭐",q:"Ta thường nhìn thấy Mặt Trăng rõ nhất khi nào?",a:["Ban đêm","Giữa trưa","Trong lớp","Dưới biển"],correct:0,hint:"Mặt Trăng thường được nhìn thấy trên bầu trời đêm."}]},
+ life:{title:"Thế giới sinh vật",emoji:"🐾",intro:"Khám phá động vật, thực vật và cơ thể.",topics:["Tất cả","Động vật","Thực vật","Cơ thể"],questions:[
+ {topic:"Động vật",art:"🐟",q:"Con vật nào sống dưới nước?",a:["Con mèo","Con cá","Con gà","Con thỏ"],correct:1,hint:"Cá dùng mang để lấy oxy trong nước."},
+ {topic:"Thực vật",art:"🌱 💧 ☀️",q:"Cây cần gì để lớn lên?",a:["Nước và ánh sáng","Kẹo","Đồ chơi","Giày dép"],correct:0,hint:"Cây thường cần nước, ánh sáng, không khí và chất dinh dưỡng."},
+ {topic:"Động vật",art:"🦋",q:"Con vật nào có cánh và thường hút mật hoa?",a:["Bướm","Cá voi","Rùa","Ếch"],correct:0,hint:"Bướm thường bay quanh những bông hoa."},
+ {topic:"Cơ thể",art:"👀",q:"Bộ phận nào giúp em nhìn?",a:["Tai","Mũi","Mắt","Bàn chân"],correct:2,hint:"Chúng ta dùng mắt để nhìn."},
+ {topic:"Động vật",art:"🐸",q:"Con vật nào thường kêu ộp ộp?",a:["Ếch","Mèo","Gà","Chim sẻ"],correct:0,hint:"Ếch thường sống gần nơi ẩm ướt."}]},
+ world:{title:"Kiến thức quanh em",emoji:"🌍",intro:"Học kỹ năng sống, an toàn và cộng đồng.",topics:["Tất cả","An toàn","Đời sống","Cộng đồng"],questions:[
+ {topic:"An toàn",art:"🚦🔴",q:"Đèn giao thông màu đỏ có nghĩa là gì?",a:["Đi nhanh","Dừng lại","Chạy qua","Rẽ tùy ý"],correct:1,hint:"Luôn tuân theo tín hiệu giao thông cùng người lớn."},
+ {topic:"Đời sống",art:"🧼 👐",q:"Trước khi ăn, em nên làm gì?",a:["Rửa tay","Chạm đất","Chạy quanh","Đi ngủ"],correct:0,hint:"Rửa tay bằng xà phòng giúp giữ vệ sinh."},
+ {topic:"Cộng đồng",art:"🙏",q:"Khi được giúp đỡ, em nên nói gì?",a:["Không nghe","Cảm ơn","Đi đi","Không biết"],correct:1,hint:"Nói lời cảm ơn thể hiện sự lịch sự."},
+ {topic:"An toàn",art:"👨‍👩‍👧",q:"Nếu bị lạc ở nơi đông người, em nên làm gì?",a:["Đi theo người lạ","Chạy ra đường","Tìm nhân viên an ninh hoặc người lớn đáng tin cậy","Trốn đi"],correct:2,hint:"Ở nơi an toàn và nhờ người có trách nhiệm giúp đỡ."},
+ {topic:"Đời sống",art:"🪥",q:"Việc nào giúp giữ răng sạch?",a:["Đánh răng","Ăn kẹo cả ngày","Không uống nước","Dùng tay chà"],correct:0,hint:"Đánh răng đều đặn với sự hướng dẫn của người lớn."}]}
+};
+let state={stars:0,done:0,correct:0,answered:[],sound:true};try{state={...state,...JSON.parse(localStorage.getItem("beHocVui")||"{}")}}catch(e){}
+let subjectKey="math",topic="Tất cả",questionIndex=0,selected=null,checked=false,roundQuestions=[];
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem("beHocVui",JSON.stringify(state));updateProgress()}
+function updateProgress(){$("starCount").textContent=state.stars;$("doneCount").textContent=state.done;$("progressBar").style.width=Math.min(100,state.done*4)+"%";$("levelNum").textContent=Math.floor(state.stars/5)+1;$("statStars").textContent=state.stars;$("statDone").textContent=state.done;$("statCorrect").textContent=state.correct;$("achievementText").textContent=state.done===0?"Hoàn thành câu hỏi đầu tiên để nhận ngôi sao nhé!":state.stars>=10?"Tuyệt vời! Bé đã có ít nhất 10 ngôi sao. Hãy tiếp tục khám phá!":`Bé đã thử sức ${state.done} câu. Mỗi lần cố gắng đều rất đáng khen!`}
+function showScreen(name){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===name));document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("selected",b.dataset.screen===name));if(name==="progress")updateProgress();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>showScreen(b.dataset.screen));
+document.querySelectorAll("[data-subject]").forEach(b=>b.onclick=()=>startSubject(b.dataset.subject));
+$("backHome").onclick=()=>showScreen("home");
+function startSubject(key){subjectKey=key;topic="Tất cả";questionIndex=0;const s=key==="mixed"?makeMixed():subjects[key];$("subjectTitle").textContent=key==="mixed"?"Đố vui tổng hợp":s.title;$("subjectIntro").textContent=key==="mixed"?"Cùng thử sức với nhiều chủ đề nhé!":s.intro;$("subjectEmoji").textContent=key==="mixed"?"🎯":s.emoji;$("subjectEyebrow").textContent="CÙNG HỌC NÀO";renderFilters(s);prepareQuestions();showScreen("learn");renderQuestion()}
+function makeMixed(){let qs=[];Object.keys(subjects).forEach(k=>subjects[k].questions.forEach(q=>qs.push({...q,subject:k})));return{title:"Đố vui tổng hợp",emoji:"🎯",intro:"Cùng thử sức với nhiều chủ đề nhé!",topics:["Tất cả",...new Set(qs.map(q=>q.topic))],questions:qs}}
+function currentSubject(){return subjectKey==="mixed"?makeMixed():subjects[subjectKey]}
+function renderFilters(s){$("topicFilters").innerHTML="";s.topics.forEach(t=>{let b=document.createElement("button");b.className="filter"+(t===topic?" selected":"");b.textContent=t;b.onclick=()=>{topic=t;questionIndex=0;renderFilters(currentSubject());prepareQuestions();renderQuestion()};$("topicFilters").appendChild(b)})}
+function prepareQuestions(){let all=currentSubject().questions;roundQuestions=topic==="Tất cả"?[...all]:all.filter(q=>q.topic===topic);if(!roundQuestions.length)roundQuestions=[...all];roundQuestions.sort(()=>Math.random()-.5)}
+function renderQuestion(){selected=null;checked=false;let q=roundQuestions[questionIndex%roundQuestions.length];$("questionNumber").textContent=`Câu ${questionIndex+1}`;$("topicName").textContent=q.topic;$("questionArt").textContent=q.art;$("questionText").textContent=q.q;$("questionHint").textContent=q.hint||"Chọn đáp án đúng nhé!";$("feedback").textContent="";$("feedback").className="feedback";$("checkBtn").classList.remove("hidden");$("checkBtn").disabled=true;$("nextBtn").classList.add("hidden");$("answers").innerHTML="";q.a.forEach((a,i)=>{let b=document.createElement("button");b.className="answer";b.textContent=a;b.onclick=()=>{if(checked)return;selected=i;document.querySelectorAll(".answer").forEach(x=>x.classList.remove("chosen"));b.classList.add("chosen");$("checkBtn").disabled=false};$("answers").appendChild(b)})}
+$("checkBtn").onclick=()=>{if(selected===null||checked)return;checked=true;let q=roundQuestions[questionIndex%roundQuestions.length],buttons=[...document.querySelectorAll(".answer")];buttons.forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add("correct");if(i===selected&&i!==q.correct)b.classList.add("wrong")});state.done++;if(selected===q.correct){state.correct++;state.stars++;$("feedback").textContent="Đúng rồi! Bé giỏi quá! ⭐";$("feedback").className="feedback good";if(state.sound)beep(660)}else{$("feedback").textContent="Chưa đúng rồi, mình cùng học lại nhé! 💛";$("feedback").className="feedback bad";if(state.sound)beep(260)}save();$("checkBtn").classList.add("hidden");$("nextBtn").classList.remove("hidden")};
+$("nextBtn").onclick=()=>{questionIndex++;if(questionIndex%roundQuestions.length===0)prepareQuestions();renderQuestion()};
+function beep(freq){try{let ctx=new(window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=freq;g.gain.value=.04;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.12)}catch(e){}}
+$("soundBtn").onclick=()=>{state.sound=!state.sound;$("soundBtn").textContent=state.sound?"🔊":"🔇";save();toast(state.sound?"Đã bật âm thanh":"Đã tắt âm thanh")};
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1800)}
+$("resetBtn").onclick=()=>{if(confirm("Bé và người lớn có muốn đặt lại toàn bộ tiến trình không?")){state={stars:0,done:0,correct:0,answered:[],sound:true};save();$("soundBtn").textContent="🔊";toast("Đã đặt lại tiến trình")}};
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+updateProgress();
+
+// Mở rộng ngân hàng câu hỏi và chế độ học theo lứa tuổi.
+const extraQuestions={
+ math:[
+ {topic:"Đếm số",art:"🦋 🦋 🦋 🦋 🦋",q:"Có 5 con bướm, thêm 2 con. Có tất cả bao nhiêu con?",a:["6 con","7 con","8 con","5 con"],correct:1,hint:"Bắt đầu từ 5 rồi đếm thêm 2.",age:"7-8",difficulty:2},
+ {topic:"Phép tính",art:"🍓🍓🍓🍓🍓🍓",q:"Có 6 quả dâu, bé ăn 2 quả. Còn lại mấy quả?",a:["3 quả","5 quả","4 quả","2 quả"],correct:2,hint:"Lấy 6 bớt đi 2.",age:"7-8",difficulty:2},
+ {topic:"Hình học",art:"🟦 🔺 ⚪ 🟦",q:"Trong dãy này, hình nào có 4 cạnh bằng nhau?",a:["Hình tròn","Hình vuông","Hình tam giác","Hình bầu dục"],correct:1,hint:"Hình vuông có 4 cạnh bằng nhau.",age:"7-8",difficulty:2},
+ {topic:"Phép tính",art:"🧺 🍎🍎🍎🍎🍎🍎🍎🍎",q:"8 quả táo chia đều vào 2 giỏ. Mỗi giỏ có mấy quả?",a:["2 quả","3 quả","4 quả","6 quả"],correct:2,hint:"Chia thành hai nhóm bằng nhau.",age:"9-10",difficulty:3},
+ {topic:"Phép tính",art:"🔢 15 − 7 = ?",q:"15 − 7 bằng bao nhiêu?",a:["7","8","9","6"],correct:1,hint:"Từ 15 đếm lùi 7 bước.",age:"9-10",difficulty:3},
+ {topic:"Đếm số",art:"🪙 🪙 🪙 🪙",q:"Mỗi đồng xu trị giá 2 điểm. 4 đồng xu được bao nhiêu điểm?",a:["6 điểm","8 điểm","4 điểm","10 điểm"],correct:1,hint:"Cộng 2 + 2 + 2 + 2.",age:"9-10",difficulty:3}
+ ],
+ viet:[
+ {topic:"Chữ cái",art:"🐘 📖",q:"Từ “voi” có âm đầu là gì?",a:["v","b","t","m"],correct:0,hint:"Voi bắt đầu bằng âm v.",age:"5-6",difficulty:1},
+ {topic:"Từ ngữ",art:"🌧️ ➕ 🌈",q:"Từ nào gần nghĩa với “dũng cảm”?",a:["Nhút nhát","Can đảm","Buồn ngủ","Vội vàng"],correct:1,hint:"Người dũng cảm không dễ lùi bước trước điều khó.",age:"9-10",difficulty:3},
+ {topic:"Câu hay",art:"🧒 🤝 🧒",q:"Bạn làm rơi bút, em nên nói gì?",a:["Mặc kệ bạn","Bạn thật vụng","Để mình nhặt giúp nhé","Không được nhặt"],correct:2,hint:"Lời nói tử tế thể hiện sự quan tâm.",age:"7-8",difficulty:2},
+ {topic:"Từ ngữ",art:"🐦 🌳",q:"Từ nào chỉ hoạt động của chim?",a:["Bay","Xanh","Mềm","Tròn"],correct:0,hint:"Từ chỉ hoạt động trả lời câu hỏi làm gì?",age:"7-8",difficulty:2}
+ ],
+ nature:[
+ {topic:"Thời tiết",art:"☁️ 🌧️ 🌱",q:"Sau cơn mưa, cây thường nhận được điều gì?",a:["Nước","Kẹo","Giấy","Đồ chơi"],correct:0,hint:"Nước là một yếu tố cần thiết cho cây.",age:"5-6",difficulty:1},
+ {topic:"Môi trường",art:"🗑️ ♻️ 🧴",q:"Chai nhựa sạch nên được làm gì nếu nơi em sống có phân loại rác?",a:["Bỏ xuống sông","Đem phân loại tái chế","Chôn ở sân chơi","Đốt tùy ý"],correct:1,hint:"Làm theo hướng dẫn phân loại rác của địa phương.",age:"9-10",difficulty:3},
+ {topic:"Trái Đất",art:"🌞 ➡️ 🌍",q:"Điều gì tạo ra ngày và đêm trên Trái Đất?",a:["Trái Đất tự quay","Mây chạy","Mặt Trăng đổi màu","Cây lớn lên"],correct:0,hint:"Trái Đất quay quanh trục của mình.",age:"9-10",difficulty:3},
+ {topic:"Thời tiết",art:"🌡️ ☀️",q:"Dụng cụ nào thường dùng để đo nhiệt độ?",a:["Nhiệt kế","La bàn","Thước kẻ","Kính lúp"],correct:0,hint:"Nhiệt kế cho biết nóng hay lạnh đến mức nào.",age:"7-8",difficulty:2}
+ ],
+ life:[
+ {topic:"Động vật",art:"🐣 🐔",q:"Gà con nở ra từ đâu?",a:["Quả trứng","Hòn đá","Lá cây","Đám mây"],correct:0,hint:"Gà là động vật đẻ trứng.",age:"5-6",difficulty:1},
+ {topic:"Thực vật",art:"🌰 ➡️ 🌱 ➡️ 🌳",q:"Hạt có thể phát triển thành gì khi có điều kiện phù hợp?",a:["Cây non","Viên sỏi","Đám mây","Con cá"],correct:0,hint:"Hạt nảy mầm rồi phát triển thành cây.",age:"7-8",difficulty:2},
+ {topic:"Động vật",art:"🐬 🌊",q:"Cá heo sống ở biển và thở bằng gì?",a:["Mang như cá","Phổi, nên phải ngoi lên lấy không khí","Da","Vây"],correct:1,hint:"Cá heo là động vật có vú.",age:"9-10",difficulty:3},
+ {topic:"Cơ thể",art:"🫁 ❤️",q:"Cơ quan nào bơm máu đi khắp cơ thể?",a:["Tim","Dạ dày","Tai","Đầu gối"],correct:0,hint:"Tim co bóp để đưa máu đi khắp cơ thể.",age:"9-10",difficulty:3}
+ ],
+ world:[
+ {topic:"An toàn",art:"🚸 👩‍👦",q:"Khi qua đường, bé nên làm gì?",a:["Tự chạy qua","Nắm tay người lớn và quan sát tín hiệu","Vừa đi vừa nhìn điện thoại","Chạy theo bóng"],correct:1,hint:"Qua đường ở nơi phù hợp cùng người lớn đáng tin cậy.",age:"5-6",difficulty:1},
+ {topic:"Đời sống",art:"🧴 👐 💧",q:"Khi nào nên rửa tay?",a:["Trước khi ăn và sau khi đi vệ sinh","Chỉ khi tay nhìn rất bẩn","Không bao giờ","Chỉ vào cuối tuần"],correct:0,hint:"Rửa tay đúng lúc giúp phòng tránh mầm bệnh.",age:"7-8",difficulty:2},
+ {topic:"Cộng đồng",art:"🧑‍🚒 🚑 👩‍⚕️",q:"Ai thường giúp chữa bệnh cho mọi người?",a:["Bác sĩ","Phi công","Thợ mộc","Nhạc sĩ"],correct:0,hint:"Bác sĩ chăm sóc và điều trị người bệnh.",age:"5-6",difficulty:1},
+ {topic:"An toàn",art:"📱 👨‍👩‍👧",q:"Nếu người lạ rủ đi theo mà không có người thân, bé nên làm gì?",a:["Đi theo ngay","Từ chối và tìm người lớn đáng tin cậy","Giấu gia đình","Nhận quà rồi đi"],correct:1,hint:"Không đi theo người lạ; tìm người lớn đáng tin cậy để giúp.",age:"7-8",difficulty:2}
+ ]
+};
+Object.keys(extraQuestions).forEach(k=>subjects[k].questions.push(...extraQuestions[k]));
+let learningMode="learn";
+const lessonNotes={
+ math:{title:"Cùng đếm thật vui!",text:"Hãy chỉ vào từng hình và đếm chậm rãi. Khi làm phép cộng, mình thêm vào; khi làm phép trừ, mình bớt đi. Bé có thể dùng ngón tay hoặc đồ vật thật để luyện tập."},
+ viet:{title:"Chơi cùng chữ và từ",text:"Đọc từ từ, nghe âm đầu rồi thử nói thành tiếng. Bé có thể tìm một đồ vật quanh mình có cùng âm đầu. Mỗi từ mới là một điều thú vị!"},
+ nature:{title:"Nhà khoa học tí hon",text:"Quan sát bầu trời, cây cối và môi trường quanh em. Hãy tự hỏi: Mình nhìn thấy gì? Điều gì đã thay đổi? Nhớ khám phá ngoài trời cùng người lớn nhé."},
+ life:{title:"Bạn thân của muôn loài",text:"Mỗi loài sinh vật có những đặc điểm riêng. Quan sát hình dáng, nơi sống và cách chúng phát triển. Hãy đối xử nhẹ nhàng với động vật và không chạm vào loài lạ."},
+ world:{title:"Kỹ năng nhỏ, an toàn lớn",text:"Học cách giữ vệ sinh, nói lời lịch sự và nhận biết tình huống cần người lớn giúp đỡ. Khi không chắc chắn, hãy dừng lại và hỏi người lớn đáng tin cậy."},
+ mixed:{title:"Thử thách khám phá",text:"Mỗi câu hỏi là một cơ hội để quan sát, suy nghĩ và thử lại. Đọc kỹ câu hỏi, tìm manh mối trong hình rồi chọn đáp án phù hợp nhé!"}
+};
+const originalPrepareQuestions=prepareQuestions;
+prepareQuestions=function(){let all=currentSubject().questions;const age=$("ageSelect")?.value||"7-8",diff=Number($("difficultySelect")?.value||2);let filtered=all.filter(q=>{let ageOk=!q.age||q.age===age;let levelOk=!q.difficulty||q.difficulty===diff;return ageOk&&levelOk});if(topic!=="Tất cả")filtered=filtered.filter(q=>q.topic===topic);if(!filtered.length){filtered=all.filter(q=>(!q.age||q.age===age)&&(!q.difficulty||q.difficulty===diff));if(topic!=="Tất cả")filtered=filtered.filter(q=>q.topic===topic)}if(!filtered.length)filtered=topic==="Tất cả"?all:all.filter(q=>q.topic===topic);roundQuestions=[...filtered].sort(()=>Math.random()-.5)};
+const originalRenderQuestion=renderQuestion;
+renderQuestion=function(){originalRenderQuestion();let q=roundQuestions[questionIndex%roundQuestions.length];if(q){$("lessonArt").textContent=q.art;$("lessonTitle").textContent=lessonNotes[subjectKey]?.title||"Cùng khám phá";$("lessonText").textContent=(lessonNotes[subjectKey]?.text||q.hint)+" Câu hỏi hôm nay: "+q.q;}};
+function setMode(mode){learningMode=mode;document.querySelectorAll(".mode-btn").forEach(b=>b.classList.toggle("selected",b.dataset.mode===mode));$("lessonPanel").classList.toggle("hidden",mode!=="learn");$("quizPanel").classList.toggle("hidden",mode==="learn");if(mode==="game"){ $("quizPanel").classList.remove("hidden");toast("Trò chơi nhanh: chọn đáp án trước khi hết lượt nhé!");}}
+document.querySelectorAll(".mode-btn").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+["ageSelect","difficultySelect"].forEach(id=>$(id).addEventListener("change",()=>{questionIndex=0;prepareQuestions();renderQuestion();toast("Đã đổi lộ trình học cho bé!")}));
+$("speakBtn").onclick=()=>{if(!window.speechSynthesis){toast("Trình duyệt chưa hỗ trợ đọc thành tiếng");return;}speechSynthesis.cancel();const text=$("lessonTitle").textContent+". "+$("lessonText").textContent;const utterance=new SpeechSynthesisUtterance(text);utterance.lang="vi-VN";utterance.rate=.88;speechSynthesis.speak(utterance)};
+$("lessonNextBtn").onclick=()=>{questionIndex++;if(questionIndex%roundQuestions.length===0)prepareQuestions();renderQuestion();toast("Khám phá tiếp nào! 🌟")};
+// Đổi môn học luôn giữ nguyên chế độ học bằng hình đã chọn.
+const startSubjectOriginal=startSubject;
+startSubject=function(key){startSubjectOriginal(key);setMode(learningMode);};
+
+setMode("learn");

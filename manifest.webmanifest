@@ -1,0 +1,11 @@
+{
+  "name": "Bé Học Vui",
+  "short_name": "Bé Học Vui",
+  "description": "Ứng dụng học vui cho bé 5–10 tuổi",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7faff",
+  "theme_color": "#e9f5ff",
+  "lang": "vi",
+  "icons": []
+}
