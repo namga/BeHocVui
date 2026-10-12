@@ -48,3 +48,11 @@ The app imports the native Capacitor text-to-speech plugin. Run `npm install` an
 ## Version 5.4.0
 
 This release includes defensive page-navigation handling, visible version label v5.4.0, service-worker cache invalidation, and Android versionName 5.4.0 / versionCode 540. The workflow sets the native Android version after `npx cap add android`.
+
+
+## v5.5.0 runtime fix and verification
+- The app HTML loads `www/app.bundle.js`, not the unbundled `www/app.js` source.
+- GitHub Actions now builds the bundle and fails immediately if it is missing or the HTML entry point does not reference it.
+- The HTML shows a clear diagnostic if the bundle fails to load.
+- Android version: `5.5.0` / versionCode `550`.
+- The quiz answer choices and learning-mode controls are rendered by the bundle. A build that omits this bundle displays the static placeholder question without choices or native text-to-speech.
