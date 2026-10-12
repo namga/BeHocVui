@@ -60,3 +60,12 @@ This release includes defensive page-navigation handling, visible version label 
 
 ## v5.5.1: workflow fix based on uploaded android.yml.txt
 The uploaded workflow omitted `npm run build`, even though `www/index.html` loads `app.bundle.js`. This release makes bundle generation mandatory, checks the bundle before Capacitor sync, checks that Capacitor copied the bundle and HTML entry point into Android assets, and labels the artifact with version 5.5.1. If any check fails, Actions stops before producing an APK instead of silently packaging an incomplete app.
+
+
+## v5.5.2: fixes based on the actual uploaded workflow
+- The uploaded `android.yml.txt` did not run `npm run build`; the HTML expects `app.bundle.js`, so app interactions can be absent when that file is not generated.
+- This workflow builds the bundle and verifies it exists and is copied into `android/app/src/main/assets/public/` before assembling the APK.
+- Removed setup-node npm cache configuration because this ZIP does not include a lockfile; otherwise setup-node may stop with "Dependency lock file not found".
+- The Android version setter supports both Gradle forms (`versionName "1.0"` and `versionName = "1.0"`).
+- Version is 5.5.2, versionCode 552. The workflow checks these values before building.
+- If Actions fails at a verification step, do not install an older artifact; fix the indicated workflow/source issue first.
