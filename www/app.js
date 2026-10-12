@@ -220,9 +220,10 @@ document.querySelectorAll(".mode-btn").forEach(b => b.addEventListener("click", 
   });
 });
 
-// Native TTS for Capacitor Android/iOS; Web Speech fallback for browsers.
+// Native TTS for Capacitor Android/iOS with language fallbacks and browser fallback.
 let nativeTtsAvailable = false;
 let speechBusy = false;
+let nativeTtsLastError = "";
 
 async function stopLessonSpeech() {
   try {
@@ -234,6 +235,30 @@ async function stopLessonSpeech() {
   speechBusy = false;
   $("speakBtn").dataset.reading = "false";
   $("speakBtn").textContent = "🔊 Nghe bài học";
+  $("speakBtn").disabled = false;
+}
+
+async function speakWithNativeTts(text, btn) {
+  const base = { text, rate: 0.78, pitch: 1.0, volume: 1.0, category: "ambient" };
+  const attempts = [
+    { ...base, lang: "vi-VN" },
+    { ...base, lang: "vi" },
+    { ...base } // use the Android TTS engine's default language if Vietnamese locale alias is rejected
+  ];
+  let lastError;
+  for (const options of attempts) {
+    try {
+      await TextToSpeech.speak(options);
+      return true;
+    } catch (error) {
+      lastError = error;
+      nativeTtsLastError = String(error && (error.message || error) || "Unknown native TTS error");
+      console.warn("Native TTS attempt failed:", options.lang || "device default", error);
+      try { await TextToSpeech.stop(); } catch (_) {}
+    }
+  }
+  nativeTtsLastError = String(lastError && (lastError.message || lastError) || nativeTtsLastError);
+  return false;
 }
 
 async function speakLesson() {
@@ -247,37 +272,36 @@ async function speakLesson() {
 
   btn.disabled = true;
   btn.textContent = "⏳ Đang chuẩn bị giọng đọc…";
+  nativeTtsLastError = "";
 
-  // Prefer native Android/iOS Text-to-Speech plugin, which works in WebView.
-  try {
-    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
-      nativeTtsAvailable = true;
+  // Native plugin first on installed Capacitor app.
+  if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+    nativeTtsAvailable = true;
+    try {
+      // Set the button to Stop before awaiting speak, so users can interrupt long lessons.
       speechBusy = true;
       btn.dataset.reading = "true";
       btn.disabled = false;
       btn.textContent = "⏹️ Dừng đọc";
-      await TextToSpeech.speak({
-        text,
-        lang: "vi-VN",
-        rate: 0.78,
-        pitch: 1.0,
-        volume: 1.0,
-        category: "ambient"
-      });
-      await stopLessonSpeech();
-      return;
+      const ok = await speakWithNativeTts(text, btn);
+      if (ok) {
+        await stopLessonSpeech();
+        return;
+      }
+      // Do not return here: try Web Speech fallback below in case native plugin/locale fails.
+      speechBusy = false;
+      btn.dataset.reading = "false";
+      btn.disabled = true;
+      btn.textContent = "⏳ Thử bộ đọc dự phòng…";
+    } catch (error) {
+      nativeTtsLastError = String(error && (error.message || error) || "Unknown native TTS error");
+      console.error("Native TTS error:", error);
+      speechBusy = false;
+      btn.dataset.reading = "false";
     }
-  } catch (error) {
-    speechBusy = false;
-    btn.dataset.reading = "false";
-    console.error("Native TTS error:", error);
-    toast("Chưa phát được giọng đọc. Hãy kiểm tra dịch vụ Chuyển văn bản thành lời nói và cài giọng Tiếng Việt trên điện thoại.");
-    btn.textContent = "🔊 Nghe bài học";
-    btn.disabled = false;
-    return;
   }
 
-  // Browser fallback for PWA / regular browser.
+  // Browser/WebView fallback.
   const synth = window.speechSynthesis;
   if (synth && typeof window.SpeechSynthesisUtterance !== "undefined") {
     try {
@@ -291,11 +315,13 @@ async function speakLesson() {
       btn.disabled = false;
       btn.textContent = "⏹️ Dừng đọc";
       utterance.onend = () => { stopLessonSpeech(); };
-      utterance.onerror = () => {
+      utterance.onerror = (event) => {
         stopLessonSpeech();
-        toast("Không phát được giọng đọc. Hãy kiểm tra âm lượng hoặc cài giọng Tiếng Việt.");
+        console.error("Browser TTS error:", event && event.error, event);
+        toast("Bộ đọc dự phòng cũng không phát được. Hãy bật dịch vụ Chuyển văn bản thành lời nói và tải giọng Tiếng Việt.");
       };
       synth.speak(utterance);
+      // Some Android WebViews silently fail to enqueue speech; leave the button usable.
       return;
     } catch (error) {
       console.error("Browser TTS error:", error);
@@ -304,7 +330,9 @@ async function speakLesson() {
 
   btn.textContent = "🔊 Nghe bài học";
   btn.disabled = false;
-  toast("Thiết bị chưa có bộ đọc văn bản. Hãy cài hoặc bật dịch vụ Chuyển văn bản thành lời nói của Google và tải giọng Tiếng Việt.");
+  btn.dataset.reading = "false";
+  const detail = nativeTtsLastError ? ` Chi tiết: ${nativeTtsLastError}` : "";
+  toast("Chưa phát được giọng đọc. Vào Cài đặt Android → Chuyển văn bản thành lời nói, chọn dịch vụ Google và tải giọng Tiếng Việt." + detail);
 }
 
 $("speakBtn").onclick = () => { speakLesson(); };

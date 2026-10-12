@@ -77,3 +77,7 @@ The v5.5.2 build log identified duplicate top-level `prepareQuestions()` and `re
 
 ## v5.5.4: workflow check correction
 The v5.5.3 screenshot shows esbuild successfully emitted `www/app.bundle.js`, then the workflow failed immediately after that step. This revision replaces fragile shell `grep` checks with explicit Python assertions and corrects a version-check mismatch where the workflow expected 5.5.2 while claiming 5.5.3. The duplicate function declarations removed in v5.5.3 remain fixed. Android version is 5.5.4 / versionCode 554.
+
+
+## v5.5.5: text-to-speech fallback improvements
+The screenshot shows the native TTS call throwing and the app displaying the TTS settings toast. This release retries native speech with `vi-VN`, `vi`, and the device default locale, then continues to browser/WebView SpeechSynthesis if native attempts fail. It includes the last native error in the toast for diagnosis. This is a code-level mitigation; actual device speech still depends on a working Android TTS engine and installed voice data. Android version is 5.5.5 / versionCode 555.
