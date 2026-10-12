@@ -31,3 +31,10 @@ The workflow configuration has been prepared but has not been executed on your G
 - Lesson mode now populates title, illustration and readable lesson text from the current question.
 - Added explicit Vietnamese speech synthesis feedback and a stop action when the read-aloud button is tapped while speaking.
 - Fixed CSS selectors for answer grid/hidden panels and bumped asset cache versions.
+
+
+## v5.2 — Lesson reading fix
+- The previous version relied on browser `speechSynthesis`, which is not consistently available in Android WebView and caused the “not supported in app” message.
+- This version integrates Capacitor-7-compatible `@capacitor-community/text-to-speech` v6 for native Android/iOS reading and keeps browser speech as a fallback.
+- GitHub Actions bundles `www/app.js` to `www/app.bundle.js` before syncing/building the native app.
+- The phone still needs a working text-to-speech engine and Vietnamese voice data installed. On Android, check Settings → Accessibility or General management → Text-to-speech output (wording varies by device) and install Vietnamese voice data if available.

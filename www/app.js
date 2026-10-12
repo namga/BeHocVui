@@ -1,3 +1,5 @@
+import { TextToSpeech } from '@capacitor-community/text-to-speech';
+
 const subjects={
  math:{title:"Toán vui",emoji:"🔢",intro:"Đếm, tính toán và nhận biết hình khối.",topics:["Tất cả","Đếm số","Phép tính","Hình học"],questions:[
  {topic:"Đếm số",art:"🍎 🍎 🍎",q:"Có mấy quả táo?",a:["2 quả","3 quả","4 quả","5 quả"],correct:1,hint:"Cùng đếm từng quả nhé!"},
@@ -222,41 +224,94 @@ document.querySelectorAll(".mode-btn").forEach(b => b.addEventListener("click", 
   });
 });
 
-// Read the actual lesson using the device/browser's Vietnamese speech engine.
-$("speakBtn").onclick = () => {
+// Native TTS for Capacitor Android/iOS; Web Speech fallback for browsers.
+let nativeTtsAvailable = false;
+let speechBusy = false;
+
+async function stopLessonSpeech() {
+  try {
+    if (nativeTtsAvailable) await TextToSpeech.stop();
+  } catch (_) {}
+  try {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  } catch (_) {}
+  speechBusy = false;
+  $("speakBtn").dataset.reading = "false";
+  $("speakBtn").textContent = "🔊 Nghe bài học";
+}
+
+async function speakLesson() {
   const text = `${$("lessonTitle").textContent}. ${$("lessonText").textContent}`;
-  const synth = window.speechSynthesis;
-  if (!synth || typeof window.SpeechSynthesisUtterance === "undefined") {
-    toast("Thiết bị chưa hỗ trợ đọc bài trong ứng dụng. Hãy thử mở bằng Chrome.");
+  const btn = $("speakBtn");
+
+  if (speechBusy || btn.dataset.reading === "true") {
+    await stopLessonSpeech();
     return;
   }
+
+  btn.disabled = true;
+  btn.textContent = "⏳ Đang chuẩn bị giọng đọc…";
+
+  // Prefer native Android/iOS Text-to-Speech plugin, which works in WebView.
   try {
-    synth.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "vi-VN";
-    utterance.rate = 0.82;
-    utterance.pitch = 1.05;
-    utterance.onstart = () => { $("speakBtn").textContent = "⏹️ Đang đọc… Nhấn để dừng"; };
-    utterance.onend = () => { $("speakBtn").textContent = "🔊 Nghe bài học"; };
-    utterance.onerror = () => {
-      $("speakBtn").textContent = "🔊 Nghe bài học";
-      toast("Không phát được giọng đọc. Kiểm tra âm lượng hoặc giọng tiếng Việt trên thiết bị.");
-    };
-    if (synth.speaking || synth.pending) synth.cancel();
-    if ($("speakBtn").dataset.reading === "true") {
-      synth.cancel();
-      $("speakBtn").dataset.reading = "false";
-      $("speakBtn").textContent = "🔊 Nghe bài học";
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+      nativeTtsAvailable = true;
+      speechBusy = true;
+      btn.dataset.reading = "true";
+      btn.disabled = false;
+      btn.textContent = "⏹️ Dừng đọc";
+      await TextToSpeech.speak({
+        text,
+        lang: "vi-VN",
+        rate: 0.78,
+        pitch: 1.0,
+        volume: 1.0,
+        category: "ambient"
+      });
+      await stopLessonSpeech();
       return;
     }
-    $("speakBtn").dataset.reading = "true";
-    utterance.onend = () => { $("speakBtn").dataset.reading = "false"; $("speakBtn").textContent = "🔊 Nghe bài học"; };
-    utterance.onerror = () => { $("speakBtn").dataset.reading = "false"; $("speakBtn").textContent = "🔊 Nghe bài học"; toast("Không phát được giọng đọc. Kiểm tra âm lượng hoặc giọng tiếng Việt trên thiết bị."); };
-    synth.speak(utterance);
-  } catch (e) {
-    toast("Chưa thể phát âm thanh trên thiết bị này.");
+  } catch (error) {
+    speechBusy = false;
+    btn.dataset.reading = "false";
+    console.error("Native TTS error:", error);
+    toast("Chưa phát được giọng đọc. Hãy kiểm tra dịch vụ Chuyển văn bản thành lời nói và cài giọng Tiếng Việt trên điện thoại.");
+    btn.textContent = "🔊 Nghe bài học";
+    btn.disabled = false;
+    return;
   }
-};
+
+  // Browser fallback for PWA / regular browser.
+  const synth = window.speechSynthesis;
+  if (synth && typeof window.SpeechSynthesisUtterance !== "undefined") {
+    try {
+      synth.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "vi-VN";
+      utterance.rate = 0.82;
+      utterance.pitch = 1.0;
+      speechBusy = true;
+      btn.dataset.reading = "true";
+      btn.disabled = false;
+      btn.textContent = "⏹️ Dừng đọc";
+      utterance.onend = () => { stopLessonSpeech(); };
+      utterance.onerror = () => {
+        stopLessonSpeech();
+        toast("Không phát được giọng đọc. Hãy kiểm tra âm lượng hoặc cài giọng Tiếng Việt.");
+      };
+      synth.speak(utterance);
+      return;
+    } catch (error) {
+      console.error("Browser TTS error:", error);
+    }
+  }
+
+  btn.textContent = "🔊 Nghe bài học";
+  btn.disabled = false;
+  toast("Thiết bị chưa có bộ đọc văn bản. Hãy cài hoặc bật dịch vụ Chuyển văn bản thành lời nói của Google và tải giọng Tiếng Việt.");
+}
+
+$("speakBtn").onclick = () => { speakLesson(); };
 $("lessonNextBtn").onclick = () => {
   questionIndex++;
   if (questionIndex % roundQuestions.length === 0) prepareQuestions();
