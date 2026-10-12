@@ -1,4 +1,4 @@
-name: Build Be Hoc Vui Android APK v5.5.2
+name: Build Be Hoc Vui Android APK v5.5.4
 
 on:
   workflow_dispatch:
