@@ -1,0 +1,10 @@
+{
+  "appId": "vn.behocvui.app",
+  "appName": "Bé Học Vui",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "ios": {
+    "contentInset": "automatic",
+    "allowsLinkPreview": false
+  }
+}

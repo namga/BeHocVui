@@ -1,28 +1,52 @@
-# Bé Học Vui 🌈
+# Bé Học Vui — Capacitor Android + iOS + GitHub Actions
 
-Ứng dụng học tập tiếng Việt dành cho trẻ 5–10 tuổi. Giao diện ưu tiên điện thoại, thẻ bo tròn, màu xanh dịu, chữ lớn và thao tác chạm đơn giản.
+This starter wraps the Vietnamese kids learning web app in Capacitor. It includes GitHub Actions workflows for building an Android debug APK and an unsigned iOS simulator app.
 
-## Nội dung hiện có
-- **Toán vui:** đếm số, phép cộng/trừ đơn giản, hình học.
-- **Tiếng Việt:** chữ cái, từ ngữ, giao tiếp lịch sự.
-- **Khám phá tự nhiên:** thời tiết, Trái Đất, bảo vệ môi trường.
-- **Thế giới sinh vật:** động vật, thực vật, cơ thể người.
-- **Kiến thức quanh em:** an toàn giao thông, vệ sinh, ứng xử.
-- **Đố vui tổng hợp:** câu hỏi từ nhiều môn.
-- Chọn độ tuổi 5–6, 7–8 hoặc 9–10; chọn mức dễ, vừa hoặc thử thách.
-- Có chế độ học bằng hình, đọc bài thành tiếng (nếu trình duyệt hỗ trợ), trắc nghiệm và trò chơi nhanh.
-- Ngân hàng câu hỏi được mở rộng theo chủ đề; các hình minh họa dùng biểu tượng sinh động trong thẻ bài học.
-- Theo dõi câu đã làm, câu đúng và ngôi sao; tự lưu trên thiết bị bằng localStorage.
-- Có nút bật/tắt âm thanh và PWA/service worker cơ bản.
+## Build Android APK first (no paid account required)
 
-## Chạy thử
-Mở `index.html` bằng trình duyệt hiện đại. Để cài PWA và kiểm tra chế độ ngoại tuyến, hãy chạy qua máy chủ HTTPS hoặc localhost.
+1. Create a GitHub repository, for example `be-hoc-vui`.
+2. Upload all files from this folder to the repository root, including `.github/workflows/` and hidden files.
+3. Open **Actions** and enable workflows if GitHub asks.
+4. Select **Build Be Hoc Vui Android APK** and click **Run workflow**, or push to `main`/`master`.
+5. When the run completes, open the run's **Artifacts** section and download `Be-Hoc-Vui-Android-debug-APK`.
+6. Extract the artifact ZIP. It contains `app-debug.apk`. Transfer it to an Android phone and install it. Android may ask you to allow installation from that source.
 
-## Đưa lên GitHub Pages
-1. Tạo repository GitHub và tải toàn bộ tệp trong thư mục này lên.
-2. Vào **Settings → Pages**.
-3. Chọn nhánh `main`, thư mục `/root`, rồi lưu.
-4. Mở URL GitHub Pages được cấp.
+The workflow uses a GitHub-hosted Ubuntu runner, Node.js 22, Java 21, generates the Capacitor Android project when it is not committed, syncs `www/`, and runs `assembleDebug`.
 
-## Lưu ý
-Đây là bản khởi đầu có câu hỏi mẫu, chưa phải chương trình học đầy đủ theo từng lớp. Hãy để phụ huynh/người dạy đồng hành cùng trẻ, nhất là các nội dung an toàn. Tiến trình hiện lưu trên trình duyệt của thiết bị, chưa đồng bộ giữa nhiều thiết bị.
+## Important notes about this APK
+
+- This is a **debug APK** for testing, not a Play Store release build.
+- It does not need an Apple or Google paid developer account to build.
+- The workflow has not been run on GitHub from this package yet; run it to verify dependencies and build output.
+- If your repository already contains an Android project, the workflow reuses it and runs `npx cap sync android`.
+- For a Play Store release later, configure a signed Android App Bundle (`.aab`) using protected GitHub Actions secrets. Never commit signing keystores or passwords.
+
+## Build iOS
+
+The separate workflow is `.github/workflows/ios-build.yml`. It runs on a macOS GitHub runner. An unsigned simulator app is useful for build checks but is not an installable iPhone IPA. Installing on a physical iPhone or publishing to TestFlight/App Store requires the appropriate signing setup; distribution generally requires Apple Developer Program membership.
+
+## Project structure
+
+```text
+Be_Hoc_Vui/
+├── .github/workflows/
+│   ├── android-build.yml
+│   └── ios-build.yml
+├── www/                       # HTML/CSS/JS/PWA app
+├── package.json
+├── capacitor.config.json
+└── README.md
+```
+
+## Local development
+
+```bash
+npm install
+npx cap add android      # only once, if no android/ folder exists
+npx cap sync android
+npx cap open android
+```
+
+## Security
+
+Never commit signing keystores, `.jks`/`.keystore` files, certificates, API keys, or passwords. Use GitHub Actions secrets for release signing.
