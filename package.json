@@ -1,6 +1,6 @@
 {
   "name": "be-hoc-vui",
-  "version": "5.5.0",
+  "version": "5.5.1",
   "private": true,
   "description": "Be Hoc Vui - Vietnamese kids learning app with Capacitor for Android and iOS",
   "scripts": {

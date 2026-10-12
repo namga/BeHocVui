@@ -56,3 +56,7 @@ This release includes defensive page-navigation handling, visible version label 
 - The HTML shows a clear diagnostic if the bundle fails to load.
 - Android version: `5.5.0` / versionCode `550`.
 - The quiz answer choices and learning-mode controls are rendered by the bundle. A build that omits this bundle displays the static placeholder question without choices or native text-to-speech.
+
+
+## v5.5.1: workflow fix based on uploaded android.yml.txt
+The uploaded workflow omitted `npm run build`, even though `www/index.html` loads `app.bundle.js`. This release makes bundle generation mandatory, checks the bundle before Capacitor sync, checks that Capacitor copied the bundle and HTML entry point into Android assets, and labels the artifact with version 5.5.1. If any check fails, Actions stops before producing an APK instead of silently packaging an incomplete app.
